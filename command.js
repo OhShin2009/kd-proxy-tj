@@ -6,12 +6,14 @@ const DEFAULT_SECRET_FILE = '/usr/local/etc/ipsec.secrets.default'
 module.exports = {
 
   append (username, callback) {
-    redis.get(username).then(function (data) {
-      if (data) return callback(null, data)
+    let cacheKey = `pair:${username}`
+    redis.get(cacheKey).then(function (data) {
+      if (data) {
+        return callback(null, data)
+      }
       let password = new Date().getTime().toString()
       let pair = `${username} %any : EAP \\"${password}\\"`
-      let cacheKey = `pair:${username}`
-      fs.appendFile(SECRET_FILE, pair, (err) => {
+      fs.appendFile(SECRET_FILE, pair + '\n', (err) => {
         if (err) return callback(err)
         redis.set(cacheKey, password).then(() => {callback(null, password)}).error(callback)
       })
