@@ -1,6 +1,5 @@
 const net = require('net')
 const command = require('./command')
-const redis = require('./redis')
 const PORT = 56789
 
 console.info('Server is running on port ' + PORT)
