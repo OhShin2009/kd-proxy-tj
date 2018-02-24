@@ -1,15 +1,21 @@
 const {exec} = require('child_process')
-const PATH = '/usr/local/etc/ipsec.secrets'
-const fs = require('fs')
+const fs = require('fs-extra')
+const redis = require('./redis')
+const SECRET_FILE = '/usr/local/etc/ipsec.secrets'
+const EMPTY_SECRET_FILE = '/usr/local/etc/ipsec.secrets.empty'
 module.exports = {
 
   append (username, callback) {
-    let password = new Date().getTime().toString()
-    let pair = `${username} %any : EAP \\"${password}\\"`
-    fs.appendFile(PATH, pair, function (err) {
-      if (err) return callback(err)
-      return callback(null, password)
-    })
+    redis.get(username).then(function (data) {
+      if (data) return callback(null, data)
+      let password = new Date().getTime().toString()
+      let pair = `${username} %any : EAP \\"${password}\\"`
+      let cacheKey = `pair:${username}`
+      fs.appendFile(SECRET_FILE, pair, (err) => {
+        if (err) return callback(err)
+        redis.set(cacheKey, password).then(() => {callback(null, password)}).error(callback)
+      })
+    }).error(callback)
   },
 
   reload (callback) {
@@ -21,9 +27,14 @@ module.exports = {
   },
 
   clean (callback) {
-    exec('cp /usr/local/etc/ipsec.secrets.empty /usr/local/etc/ipsec.secrets', function (err) {
-      if (err) return callback(err)
+    try {
+      fs.copySync(EMPTY_SECRET_FILE, SECRET_FILE)
       exec('ipsec restart', callback)
-    })
+      callback(null)
+      console.log('clean success!')
+    } catch (err) {
+      console.error(err)
+      callback(err)
+    }
   }
 }

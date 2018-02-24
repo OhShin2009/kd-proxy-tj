@@ -31,21 +31,13 @@ server.on('connection', function (socket) {
     }
     if (cmd === 'register') {
       let username = arr[2]
-      redis.get(username).then(function (data) {
-        if (data) {
+      command.append(username, function (err, data) {
+        if (err) {
+          socket.destroy(err)
+        } else {
+          isReload = true
           socket.end(`cmd:register:${data}`)
-          return
         }
-        command.append(username, function (err, data) {
-          if (err) {
-            socket.destroy(err)
-          } else {
-            isReload = true
-            redis.set(username, data).then(function () {
-              socket.end(`cmd:register:${data}`)
-            })
-          }
-        })
       })
     } else if (cmd === 'clean') {
       command.clean(function (err) {
