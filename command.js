@@ -30,7 +30,6 @@ module.exports = {
     try {
       fs.copySync(DEFAULT_SECRET_FILE, SECRET_FILE)
       exec('ipsec restart', callback)
-      callback(null)
       console.log('clean success!')
     } catch (err) {
       console.error(err)
