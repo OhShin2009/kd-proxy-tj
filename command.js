@@ -12,7 +12,7 @@ module.exports = {
         return callback(null, data)
       }
       let password = new Date().getTime().toString()
-      let pair = `${username} %any : EAP \\"${password}\\"`
+      let pair = `${username} %any : EAP "${password}"`
       fs.appendFile(SECRET_FILE, pair + '\n', (err) => {
         if (err) return callback(err)
         redis.set(cacheKey, password).then(() => {callback(null, password)}).error(callback)
