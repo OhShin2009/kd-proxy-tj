@@ -2,7 +2,7 @@ const {exec} = require('child_process')
 const fs = require('fs-extra')
 const redis = require('./redis')
 const SECRET_FILE = '/usr/local/etc/ipsec.secrets'
-const EMPTY_SECRET_FILE = '/usr/local/etc/ipsec.secrets.empty'
+const DEFAULT_SECRET_FILE = '/usr/local/etc/ipsec.secrets.default'
 module.exports = {
 
   append (username, callback) {
@@ -28,7 +28,7 @@ module.exports = {
 
   clean (callback) {
     try {
-      fs.copySync(EMPTY_SECRET_FILE, SECRET_FILE)
+      fs.copySync(DEFAULT_SECRET_FILE, SECRET_FILE)
       exec('ipsec restart', callback)
       callback(null)
       console.log('clean success!')
