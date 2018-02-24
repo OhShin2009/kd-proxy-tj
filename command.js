@@ -29,7 +29,7 @@ module.exports = {
   },
 
   executeScript (file, callback) {
-    let cmdFile = `/home/kd-script/${file}`
+    let cmdFile = `/home/kd-scripts/${file}.sh`
     exec(`sh ${cmdFile}`, callback)
   },
 
