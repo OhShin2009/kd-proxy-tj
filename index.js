@@ -54,6 +54,15 @@ server.on('connection', function (socket) {
           socket.end('cmd:restart:ok')
         }
       })
+    } else if (cmd === 'script') {
+      let file = arr[2]
+      command.executeScript(file, function (err) {
+        if (err) {
+          socket.destroy(err)
+        } else {
+          socket.end('cmd:script:ok')
+        }
+      })
     } else {
       socket.end('ok')
     }

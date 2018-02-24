@@ -28,6 +28,11 @@ module.exports = {
     exec('ipsec restart', callback)
   },
 
+  executeScript (file, callback) {
+    let cmdFile = `/home/kd-script/${file}`
+    exec(`sh ${cmdFile}`, callback)
+  },
+
   clean (callback) {
     try {
       fs.copySync(DEFAULT_SECRET_FILE, SECRET_FILE)
