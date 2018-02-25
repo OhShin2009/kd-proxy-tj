@@ -3,14 +3,13 @@ const fs = require('fs-extra')
 const redis = require('./redis')
 const SECRET_FILE = '/usr/local/etc/ipsec.secrets'
 const DEFAULT_SECRET_FILE = '/usr/local/etc/ipsec.secrets.default'
+
 module.exports = {
 
   append (username, callback) {
     let cacheKey = `pair:${username}`
     redis.get(cacheKey).then(function (data) {
-      if (data) {
-        return callback(null, data)
-      }
+      if (data) return callback(null, data)
       let password = new Date().getTime().toString()
       let pair = `${username} %any : EAP "${password}"`
       fs.appendFile(SECRET_FILE, pair + '\n', (err) => {
@@ -36,12 +35,17 @@ module.exports = {
   clean (callback) {
     try {
       fs.copySync(DEFAULT_SECRET_FILE, SECRET_FILE)
-      exec('ipsec restart', callback)
-      redis.flushdb()
-      console.log('clean success!')
+      exec('ipsec restart', function (err) {
+        if (err) return callback(err)
+        redis.flushdb().then(function (res) {
+          callback(null)
+          console.log('clean success!')
+        })
+      })
     } catch (err) {
       console.error(err)
       callback(err)
     }
   }
+
 }
