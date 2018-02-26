@@ -35,17 +35,12 @@ module.exports = {
   clean (callback) {
     try {
       fs.copySync(DEFAULT_SECRET_FILE, SECRET_FILE)
-      exec('ipsec restart', function (err) {
+      exec('ipsec restart', (err) => {
         if (err) return callback(err)
-        redis.flushdb().then(function (res) {
-          callback(null)
-          console.log('clean success!')
-        })
+        redis.flushdb().then((res) => callback(null))
       })
     } catch (err) {
-      console.error(err)
       callback(err)
     }
   }
-
 }
