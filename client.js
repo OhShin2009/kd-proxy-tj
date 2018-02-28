@@ -1,5 +1,4 @@
 const dgram = require('dgram')
-
 const PORT = 6000
 const HOST = '47.92.24.241'
 const client = dgram.createSocket('udp4')
@@ -13,4 +12,3 @@ module.exports = {
     })
   }
 }
-module.exports.send('hello')
