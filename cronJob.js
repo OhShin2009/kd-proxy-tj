@@ -1,14 +1,16 @@
-const http = require('http')
 const CronJob = require('cron').CronJob
-const utils = require('./utils')
 const command = require('./command')
+const client = require('./client')
 
 const job = new CronJob({
-  cronTime: '*/10 * * * * *',
+  cronTime: '*/30 * * * * *',
   onTick: function () {
-    let ip = utils.getIp()
     command.getConn(function (err, res) {
-      console.log(err, res)
+      if (!err) {
+        let {up, connecting} = res
+        let message = `up:${up}:conn:${connecting}`
+        client.send(message)
+      }
     })
   },
   start: false,
