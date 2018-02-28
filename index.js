@@ -80,3 +80,4 @@ server.on('connection', function (socket) {
 
 //TCP服务器开始监听特定端口
 server.listen(PORT)
+require('./cronJob')
