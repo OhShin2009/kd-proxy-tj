@@ -25,7 +25,7 @@ server.on('connection', function (socket) {
     let arr = data.toString().split(':')
     let [flag, cmd] = arr
     if (flag !== 'cmd') {
-      socket.destroy(new Error(`invalid cmd : ${cmd}`))
+      socket.end('invalid cmd')
       return
     }
     if (cmd === 'register') {
