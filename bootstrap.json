@@ -11,7 +11,9 @@
       },
       "cwd": "/home/kd-proxy",
       "exec_mode": "cluster_mode",
-      "instances": 2
+      "instances": 2,
+      "max_memory_restart": "150M",
+      "restart_delay": "200"
     }
   ]
 }
