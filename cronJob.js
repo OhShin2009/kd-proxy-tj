@@ -6,11 +6,13 @@ const job = new CronJob({
   cronTime: '*/30 * * * * *',
   onTick: function () {
     command.getConn(function (err, res) {
-      if (!err) {
-        let {up, connecting} = res
-        let message = `up:${up}:conn:${connecting}`
-        client.send(message)
+      if (err) {
+        console.error(err)
+        return
       }
+      let {up, connecting} = res
+      let message = `hb:up:${up}:conn:${connecting}`
+      client.send(message)
     })
   },
   start: false,

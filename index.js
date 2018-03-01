@@ -1,70 +1,65 @@
 const net = require('net')
 const command = require('./command')
+const client = require('./client')
 const PORT = 56789
 
 console.info('Server is running on port ' + PORT)
 const server = net.createServer()
-let isReload = true
-
-setInterval(function () {
-  if (isReload) {
-    command.reload(function (err) {
-      if (err === null) {
-        isReload = false
-      } else {
-        console.error('reload failed ', err)
-      }
-    })
-  }
-}, 100)
 
 //监听连接事件
 server.on('connection', function (socket) {
+
+  client.send('event:start')
   //监听数据接收事件
   socket.on('data', function (data) {
     let arr = data.toString().split(':')
     let [flag, cmd] = arr
+
     if (flag !== 'cmd') {
-      socket.end('invalid cmd')
+      socket.end(`invalid cmd`)
       return
     }
+
     if (cmd === 'register') {
-      let username = arr[2]
-      command.append(username, function (err, data) {
+      let name = arr[2]
+      let exp = arr[3]
+      command.register(name, exp, function (err) {
         if (err) {
-          socket.destroy(err)
+          console.error(err)
+          socket.end('fail')
         } else {
-          isReload = true
-          socket.end(`cmd:register:${data}`)
+          socket.end('ok')
         }
       })
-    } else if (cmd === 'clean') {
-      command.clean(function (err) {
-        if (err) {
-          socket.destroy(err)
-        } else {
-          socket.end('cmd:clean:ok')
-        }
-      })
-    } else if (cmd === 'restart') {
+      return
+    }
+
+    if (cmd === 'ping') {
+      socket.end('ok')
+      return
+    }
+
+    if (cmd === 'restart') {
       command.restart(function (err) {
         if (err) {
-          socket.destroy(err)
+          console.error(err)
+          socket.end('fail')
         } else {
-          socket.end('cmd:restart:ok')
+          socket.end('ok')
         }
       })
-    } else if (cmd === 'script') {
+      return
+    }
+
+    if (cmd === 'script') {
       let file = arr[2]
       command.executeScript(file, function (err) {
         if (err) {
-          socket.destroy(err)
+          socket.end('fail')
         } else {
-          socket.end('cmd:script:ok')
+          socket.end('ok')
         }
       })
-    } else {
-      socket.end('ok')
     }
   })
 
@@ -80,4 +75,16 @@ server.on('connection', function (socket) {
 
 //TCP服务器开始监听特定端口
 server.listen(PORT)
+
+// 统计重启次数
+process.on('SIGINT', function () {
+  client.send('event:restart', function () {
+    process.exit(0)
+  })
+})
+
+process.on('message', function (msg) {
+  console.log('msg is ', msg)
+})
+
 require('./cronJob')
