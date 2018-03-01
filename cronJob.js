@@ -12,7 +12,9 @@ const job = new CronJob({
       }
       let {up, connecting} = res
       let message = `hb:up:${up}:conn:${connecting}`
-      client.send(message)
+      client.send(message, function (err) {
+
+      })
     })
   },
   start: false,
