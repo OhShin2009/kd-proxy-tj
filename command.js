@@ -27,7 +27,7 @@ module.exports = {
   getConn (callback) {
     exec('ipsec status | grep up', function (error, stdout, stderr) {
       if (error) {
-        console.error(error)
+        callback(error)
       } else {
         let res = EXP.exec(stdout)
         if (res === null) {
