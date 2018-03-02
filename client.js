@@ -9,7 +9,7 @@ module.exports = {
       if (err) {
         cb(err)
       } else {
-        console.log('UDP message sent to ' + HOST + ':' + PORT)
+        console.log(`send message : ${message}`)
         cb(null)
       }
       client.close()
