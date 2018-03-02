@@ -3,7 +3,7 @@ const command = require('./command')
 const client = require('./client')
 
 const job = new CronJob({
-  cronTime: '*/30 * * * * *',
+  cronTime: '*/15 * * * * *',
   onTick: function () {
     command.getConn(function (err, res) {
       if (err) {
