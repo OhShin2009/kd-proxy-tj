@@ -7,7 +7,9 @@ const job = new CronJob({
   onTick: function () {
     command.getConn(function (err, res) {
       if (err) {
-        console.error(err)
+        let message = `hb:error`
+        client.send(message, function (err) {
+        })
         return
       }
       let {up, connecting} = res
