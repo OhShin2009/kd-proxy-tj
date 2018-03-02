@@ -9,6 +9,7 @@ module.exports = {
       if (err) {
         cb(err)
       } else {
+        console.log(`send message [${message}]`)
         cb(null)
       }
       client.close()
