@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob
 const command = require('./command')
-const client = require('./client')
+const client = require('./udp/client')
 
 const job = new CronJob({
   cronTime: '*/15 * * * * *',

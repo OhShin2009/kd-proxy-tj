@@ -1,6 +1,6 @@
 const net = require('net')
 const command = require('./command')
-const client = require('./client')
+const client = require('./udp/client')
 const PORT = 56789
 
 console.info('Server is running on port ' + PORT)

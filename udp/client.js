@@ -11,7 +11,7 @@ module.exports = {
           cb(err)
         }
       } else {
-        console.log(`send message [${message}]`)
+        console.log(`send message: ${message}`)
         if (cb) {
           cb(null)
         }
