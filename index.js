@@ -22,7 +22,8 @@ server.on('connection', function (socket) {
 
     if (cmd === 'register') {
       let name = arr[2]
-      let exp = arr[3]
+      // let exp = arr[3]
+      let exp = 60 * 60 * 12 * 3 // 3 day
       command.register(name, exp, function (err) {
         if (err) {
           console.error(err)
