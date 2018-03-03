@@ -7,10 +7,14 @@ module.exports = {
     const client = dgram.createSocket('udp4')
     client.send(message, 0, message.length, PORT, HOST, function (err, bytes) {
       if (err) {
-        cb(err)
+        if (cb) {
+          cb(err)
+        }
       } else {
         console.log(`send message [${message}]`)
-        cb(null)
+        if (cb) {
+          cb(null)
+        }
       }
       client.close()
     })
