@@ -9,7 +9,6 @@ const server = net.createServer()
 //监听连接事件
 server.on('connection', function (socket) {
 
-  client.send('event:start')
   //监听数据接收事件
   socket.on('data', function (data) {
     let arr = data.toString().split(':')
