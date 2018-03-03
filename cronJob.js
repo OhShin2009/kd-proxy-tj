@@ -13,7 +13,8 @@ const job = new CronJob({
         return
       }
       let {up, connecting} = res
-      let message = `hb:up:${up}:conn:${connecting}`
+      let nodeType = process.env.NODE_TYPE
+      let message = `{type:${nodeType},up:${up},conn:${connecting}}`
       client.send(message, function (err) {
 
       })
