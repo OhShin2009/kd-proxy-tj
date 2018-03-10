@@ -33,12 +33,19 @@ module.exports = {
     })
   },
 
-  clean () {
+  clean (callback) {
     try {
       fse.copySync(DEFAULT_SECRET_PATH, SECRET_PATH)
       redis.flushdb()
+      exec('ipsec rereadsecrets', (err) => {
+        if (err) {
+          console.error(err)
+        }
+      })
+      callback(null)
     } catch (err) {
       console.error(err)
+      callback(err)
     }
   },
 

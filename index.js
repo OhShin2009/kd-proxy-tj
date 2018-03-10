@@ -39,6 +39,18 @@ server.on('connection', function (socket) {
       return
     }
 
+    if (cmd === 'clean') {
+      command.clean(function (err) {
+        if (err) {
+          console.error(err)
+          socket.end('fail')
+        } else {
+          socket.end('ok')
+        }
+      })
+      return
+    }
+
     if (cmd === 'restart') {
       command.restart(function (err) {
         if (err) {
