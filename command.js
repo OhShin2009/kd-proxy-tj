@@ -14,7 +14,7 @@ module.exports = {
     redis.get(username).then(res => {
       if (res) return callback(null, res)
       let password = randomString({length: 8})
-      let secret = `${username} %any : EAP "${password}"`
+      let secret = `${username} %any : EAP "${password}"\n`
       fs.appendFile(SECRET_PATH, secret, (err) => {
         if (err) return callback(err)
         exec('ipsec rereadsecrets', function (err) {
