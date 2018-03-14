@@ -8,7 +8,7 @@
       "out_file": "/dev/null",
       "env": {
         "NODE_ENV": "production",
-        "NODE_TYPE": "free"
+        "NODE_TYPE": "pia"
       },
       "cwd": "/home/kd-proxy",
       "exec_mode": "cluster_mode",
